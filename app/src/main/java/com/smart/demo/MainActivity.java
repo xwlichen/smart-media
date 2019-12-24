@@ -65,7 +65,7 @@ public class MainActivity extends AppCompatActivity implements CacheListener {
                 + "test01.mp3";
         mMusicFile1 = new File(outPath);
 //        url="http://cdn.changguwen.com/cms/media/2019812/e69e3268-6d24-4446-87c1-3569a66ddf71-1565599111905.mp4";
-        Log.e("TAG", "file is path: " + mMusicFile1.getAbsolutePath());
+//        Log.e("TAG", "file is path: " + mMusicFile1.getAbsolutePath());
 
 //        SaveUtils.save(url, outPath);
 
@@ -96,7 +96,7 @@ public class MainActivity extends AppCompatActivity implements CacheListener {
         mPlayer.setOnPreparedListener(new IPlayer.OnPreparedListener() {
             @Override
             public void onPrepared() {
-                Log.e("JNI_TAG_PLAYER", "准备完毕");
+                LogUtils.e("xw","准备完毕");
 
 //                new Thread(new Runnable() {
 //                    @Override
@@ -119,14 +119,6 @@ public class MainActivity extends AppCompatActivity implements CacheListener {
 //                            runOnUiThread(new Runnable() {
 //                                @Override
 //                                public void run() {
-                            if (Looper.myLooper() != Looper.getMainLooper()) {
-                                Looper.prepare();
-                                Log.e("xw", " not main");
-
-                            } else {
-                                Log.e("xw", " is main");
-
-                            }
                             String time = data.getExtraValue() + "";
                             tvTime.setText(time);
 //                            Toast.makeText(MainActivity.this, time, Toast.LENGTH_SHORT).show();

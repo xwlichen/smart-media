@@ -2,10 +2,10 @@ package com.smart.media.player;
 
 import android.text.TextUtils;
 
-import com.smart.media.player.interf.INativePlayer;
 import com.smart.media.player.interf.IPlayer;
 import com.smart.media.player.interf.ISmartPlayer;
 import com.smart.media.player.natives.NativePlayerBase;
+import com.smart.utils.LogUtils;
 
 
 /**
@@ -18,10 +18,11 @@ public abstract class SmartBasePlayer implements ISmartPlayer {
 
     protected String source;
 
-    protected INativePlayer nativePlayer;
-    protected IPlayer.OnPreparedListener onPreparedListener;
-    protected IPlayer.OnInfoListener onInfoListener;
-    protected IPlayer.OnErrorListener onErrorListener;
+    protected NativePlayerBase nativePlayer;
+    protected IPlayer.OnPreparedListener onPreparedListener = null;
+    protected IPlayer.OnInfoListener onInfoListener = null;
+    protected IPlayer.OnErrorListener onErrorListener = null;
+
 
     protected abstract NativePlayerBase createNativePlayer();
 
@@ -57,49 +58,53 @@ public abstract class SmartBasePlayer implements ISmartPlayer {
         this.source = source;
     }
 
-
-    @Override
     public void prepare() {
         if (TextUtils.isEmpty(source)) {
             throw new NullPointerException("source is null, please call method setDataSource");
         }
-        nativePlayer.nativePrepare(source);
+        prepare(this.source);
+    }
+
+    @Override
+    public void prepare(String source) {
+        nativePlayer.prepare(source);
 
     }
 
 
     @Override
     public void start() {
-        nativePlayer.nativeStart();
+        nativePlayer.start();
     }
 
 
     @Override
     public void seek(int second) {
-        nativePlayer.nativeSeek(second);
+        nativePlayer.seek(second);
     }
 
     @Override
     public void pause() {
-        nativePlayer.nativePause();
+        nativePlayer.pause();
 
     }
 
     @Override
     public void resume() {
-        nativePlayer.nativeResume();
+        nativePlayer.resume();
 
     }
 
 
     @Override
     public void stop() {
-        nativePlayer.nativeStop();
+        nativePlayer.stop();
     }
 
     @Override
     public long getDuration() {
-        long duration = 0;
+        long duration = nativePlayer.getDuration();
+        LogUtils.e("xw", "duration:" + duration);
         return duration;
     }
 

@@ -11,7 +11,22 @@ import com.smart.media.player.bean.InfoBean;
  */
 public interface IPlayer {
 
+    void prepare(String source);
 
+    void start();
+
+    void pause();
+
+    void seek(int second);
+
+    void resume();
+
+    void next(String source);
+
+    void stop();
+
+
+    long getDuration();
 
 
     void setOnPreparedListener(IPlayer.OnPreparedListener onPreparedListener);

@@ -30,6 +30,8 @@ android {
 
 dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
+    api 'com.samrt.componet:smart-cache:1.0.1'
+
 //    api rootProject.ext.dependencies["appcompat"]\
 
 

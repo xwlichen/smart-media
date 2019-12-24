@@ -1,27 +1,22 @@
 package com.smart.media.player.interf;
 
 /**
- * @date : 2019-12-12 16:01
+ * @date : 2019-12-24 16:34
  * @author: lichen
  * @email : 1960003945@qq.com
  * @description :
  */
 public interface INativePlayer extends IPlayer {
 
+    void onPrepared();
 
-    void nativePrepare(String source);
+    void onPause();
 
-    void nativeStart();
+    void onLoaing(boolean loading);
 
-    void nativePause();
+    void onCurrentProgressUpdate(int current, int duration);
 
-    void nativeSeek(int second);
+    void onComplete();
 
-    void nativeResume();
-
-    void nativeStop();
-
-    void nativeNext(String source);
-
-    long nativeGetDuration();
+    void onError(int code, String msg);
 }

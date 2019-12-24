@@ -3,17 +3,19 @@ package com.smart.media.player.natives;
 import android.os.Handler;
 import android.os.Looper;
 import android.os.Message;
-;
 
 import com.smart.media.player.bean.InfoBean;
 import com.smart.media.player.enums.InfoCode;
 import com.smart.media.player.interf.INativePlayer;
 import com.smart.media.player.interf.IPlayer;
+import com.smart.utils.LogUtils;
 
 import java.lang.annotation.Native;
 import java.lang.ref.WeakReference;
 
 import static com.smart.media.player.natives.NativePlayerBase.MainHandler.CODE_CURRENT_PROGRESS;
+
+;
 
 
 /**
@@ -43,12 +45,13 @@ public abstract class NativePlayerBase implements INativePlayer {
 
 
     @Override
-    public void nativeSeek(int second) {
+    public void seek(int second) {
         this.currentThreadHandler.removeMessages(0);
     }
 
 
-    protected void onPrepared() {
+    @Override
+    public void onPrepared() {
         this.currentThreadHandler.post(new Runnable() {
             @Override
             public void run() {
@@ -60,12 +63,51 @@ public abstract class NativePlayerBase implements INativePlayer {
         });
     }
 
+    @Override
+    public void onPause() {
+        if (onPauseListener != null) {
+            onPauseListener.onPause();
+        }
+    }
+
+
+    @Override
+    public void onLoaing(boolean loading) {
+        if (onLoadingStatusListener != null) {
+            if (loading) {
+                onLoadingStatusListener.onLoadingStart();
+            } else {
+                onLoadingStatusListener.onLoadingEnd();
+            }
+        }
+    }
+
+    @Override
+    public void onComplete() {
+        LogUtils.e("xw", "onComplete");
+
+        if (onCompleteListener != null) {
+            onCompleteListener.onComplete();
+        }
+    }
+
+
+    @Override
+    public void onError(int code, String msg) {
+        LogUtils.e("xw", "player onError :" + msg);
+        if (onErrorListener != null) {
+            onErrorListener.onError(code, msg);
+        }
+    }
+
 
     /**
      * @param current  单位s
      * @param duration
      */
-    protected void onCurrentProgressUpdate(int current, int duration) {
+    @Override
+    public void onCurrentProgressUpdate(int current, int duration) {
+        LogUtils.e("xw", "player onProgress:" + current);
         Message msg = this.currentThreadHandler.obtainMessage(CODE_CURRENT_PROGRESS, current, 0);
         this.currentThreadHandler.sendMessage(msg);
     }

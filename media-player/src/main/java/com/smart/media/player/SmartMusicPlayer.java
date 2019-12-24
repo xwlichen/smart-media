@@ -18,7 +18,7 @@ public class SmartMusicPlayer extends SmartBasePlayer {
     @Override
     public void next(String source) {
         this.source = source;
-        nativePlayer.nativeNext(this.source);
+        nativePlayer.next(this.source);
 
 
     }

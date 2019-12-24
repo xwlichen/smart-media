@@ -12,22 +12,4 @@ public interface ISmartPlayer extends IPlayer {
     void setDataSource(String url);
 
 
-    void prepare();
-
-    void start();
-
-    void pause();
-
-    void seek(int second);
-
-    void resume();
-
-    void next(String source);
-
-    void stop();
-
-
-    long getDuration();
-
-
 }

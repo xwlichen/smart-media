@@ -58,7 +58,6 @@ dependencies {
     api rootProject.ext.dependencies["appcompat"]
 
     api project(':media-player')
-    api 'com.samrt.componet:smart-cache:1.0.1'
 
 
 }

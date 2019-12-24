@@ -2,13 +2,10 @@ package com.smart.demo;
 
 import android.os.Bundle;
 import android.os.Environment;
-import android.os.Looper;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.smart.cache.CacheListener;
@@ -31,12 +28,11 @@ public class MainActivity extends AppCompatActivity implements CacheListener {
     File mMusicFile = new File(Environment.getExternalStorageDirectory(), "test.mp3");
 
     String url = "https://cdn.changguwen.com/cms/media/2019815/65499b80-09dd-4ded-bc97-5fc3d5e21a94-1565832374013.mp3";
-//    String url="http://x128.songtasty.com/attachment/20191111/QabrdVJ0C2EFR3ylxLOf.mp3";
+    //    String url="http://x128.songtasty.com/attachment/20191111/QabrdVJ0C2EFR3ylxLOf.mp3";
     private SmartMusicPlayer mPlayer;
     MusicSeekBar musicSeekBar;
 
     TextView tvTime;
-    ImageView test;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -94,7 +90,7 @@ public class MainActivity extends AppCompatActivity implements CacheListener {
         mPlayer.setOnPreparedListener(new IPlayer.OnPreparedListener() {
             @Override
             public void onPrepared() {
-                LogUtils.e("xw","准备完毕");
+                LogUtils.e("xw", "准备完毕");
 
 //                new Thread(new Runnable() {
 //                    @Override
@@ -120,7 +116,6 @@ public class MainActivity extends AppCompatActivity implements CacheListener {
                             String time = data.getExtraValue() + "";
                             tvTime.setText(time);
 //                            Toast.makeText(MainActivity.this, time, Toast.LENGTH_SHORT).show();
-                            test.setImageResource(R.mipmap.ic_launcher);
 //                                }
 //                            });
 
@@ -139,9 +134,10 @@ public class MainActivity extends AppCompatActivity implements CacheListener {
 //
 //        musicSeekBar=findViewById(R.id.sb_progress);
         tvTime = findViewById(R.id.tvTime);
-        test = findViewById(R.id.test);
 
         EditText etSecond = findViewById(R.id.etSecond);
+        EditText etVolume = findViewById(R.id.etVolume);
+
 
         Button btnPlay = findViewById(R.id.btnPlay);
         Button btnPause = findViewById(R.id.btnPause);
@@ -214,14 +210,19 @@ public class MainActivity extends AppCompatActivity implements CacheListener {
         });
 
 
-        test.setOnClickListener(new View.OnClickListener() {
+        btnVolume.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                finish();
+                String value = etVolume.getText().toString().trim();
+                if (TextUtils.isEmpty(value)) {
+                    value = "0";
+                }
+                int percent = Integer.valueOf(value);
+                mPlayer.setVolume(percent);
             }
         });
 
-////        musicSeekBar.showLoading();
+
     }
 
 

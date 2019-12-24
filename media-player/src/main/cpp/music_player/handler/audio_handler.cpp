@@ -209,7 +209,7 @@ void AudioHandler::init_opensles() {
     if (SL_RESULT_SUCCESS != result)
         LOGE(JNI_DEBUG, "get the player interface res: %d", SL_RESULT_SUCCESS == result);
 
-    result = (*p_player_obj)->GetInterface(p_player_obj, SL_IID_PLAY, &p_volume_itf);
+    result = (*p_player_obj)->GetInterface(p_player_obj, SL_IID_VOLUME, &p_volume_itf);
     if (SL_RESULT_SUCCESS != result)
         LOGE(JNI_DEBUG, "get the voluem interface res: %d", SL_RESULT_SUCCESS == result);
 
@@ -497,8 +497,13 @@ void AudioHandler::seek_to(uint64_t seconds) {
 void AudioHandler::set_volume(int percent) {
 
     if (p_volume_itf != NULL) {
+        LOGE(JNI_DEBUG, "set_volume: %d", percent);
+        SLresult result;
+
         if (percent > 30) {
-            (*p_volume_itf)->SetVolumeLevel(p_volume_itf, (100 - percent) * -20);
+            result = (*p_volume_itf)->SetVolumeLevel(p_volume_itf, (100 - percent) * -20);
+            LOGE(JNI_DEBUG, "SetVolumeLevel res: %d", SL_RESULT_SUCCESS == result);
+
         } else if (percent > 25) {
             (*p_volume_itf)->SetVolumeLevel(p_volume_itf, (100 - percent) * -22);
         } else if (percent > 20) {

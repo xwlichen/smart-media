@@ -1,0 +1,36 @@
+apply plugin: 'com.android.library'
+apply from: '../common-setting.gradle'
+
+android {
+    defaultConfig {
+
+        externalNativeBuild {
+            cmake {
+                cppFlags "-std=c++11"
+                arguments "-DANDROID_PLATFORM_LEVEL=16",
+                        '-DANDROID_TOOLCHAIN=clang'
+            }
+
+            ndk {
+//            abiFilters "armeabi"
+                abiFilters "armeabi-v7a"
+
+            }
+        }
+    }
+
+    externalNativeBuild {
+        cmake {
+            path file('src/main/cpp/CMakeLists.txt')
+        }
+    }
+
+
+}
+
+dependencies {
+    implementation fileTree(dir: 'libs', include: ['*.jar'])
+//    api rootProject.ext.dependencies["appcompat"]\
+
+
+}

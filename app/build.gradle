@@ -1,0 +1,64 @@
+apply plugin: 'com.android.application'
+apply from: '../common-setting.gradle'
+
+android {
+//    externalNativeBuild {
+//        cmake {
+//            path file('../player/src/main/cpp/CMakeLists.txt')
+//        }
+//    }
+//    externalNativeBuild {
+//        cmake {
+//            path file('../player/src/main/cpp/CMakeLists.txt')
+//        }
+//    }
+//    externalNativeBuild {
+//        cmake {
+//            path file('CMakeLists.txt')
+//        }
+//    }
+
+
+    defaultConfig {
+        applicationId "com.smart.media.demo"
+        externalNativeBuild {
+//            cmake {
+//                cppFlags "-std=c++11"
+//                arguments "-DANDROID_PLATFORM_LEVEL=16",
+//                        '-DANDROID_TOOLCHAIN=clang'
+//            }
+            ndk {
+//                abiFilters "armeabi"
+                abiFilters "armeabi-v7a"
+
+            }
+        }
+    }
+
+//    repositories {
+//        flatDir {
+//            dirs 'libs', rootProject.ext.playerLibs, rootProject.ext.ffmpegLibs, rootProject.ext.saveLibs
+////
+//        }
+//    }
+//
+//
+//    }
+//    sourceSets {
+//        main {
+//            jniLibs.srcDirs 'src/main/libs'
+//            jni.srcDirs = []
+//        }
+//    }
+
+}
+
+dependencies {
+    implementation fileTree(dir: 'libs', include: ['*.jar'])
+    api rootProject.ext.dependencies["appcompat"]
+
+    api project(':media-player')
+    api 'com.samrt.componet:smart-cache:1.0.1'
+
+
+}

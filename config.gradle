@@ -1,0 +1,35 @@
+ext {
+    //android开发版本配置
+    android = [
+            compileSdkVersion: 29,
+            buildToolsVersion: "29.0.1",
+            minSdkVersion    : 16,
+            targetSdkVersion : 29,
+            versionCode      : 1,
+            versionName      : "1.0",
+    ]
+
+    //version配置
+    version = [
+
+
+            //androidx
+            "appcompatVersion": "1.0.2",
+
+
+    ]
+
+
+    dependencies = [
+            "appcompat": "androidx.appcompat:appcompat:${version["appcompatVersion"]}",
+
+    ]
+
+    ffmpegLibs = projectDir.getPath() + "/distribution/ffmpeg/libs"
+    playerLibs = projectDir.getPath() + "/distribution/player/libs"
+    saveLibs = projectDir.getPath() + "/distribution/save/libs"
+
+
+
+
+}

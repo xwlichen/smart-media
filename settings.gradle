@@ -1,0 +1,2 @@
+include ':app', ':media-player'
+rootProject.name='smart-media'

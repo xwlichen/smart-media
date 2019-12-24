@@ -66,6 +66,7 @@ public class NativeMusicPlayer extends NativePlayerBase {
 
     private void onCallNext() {
         if (playNext) {
+            playNext = false;
 //            String url = "https://cdn.changguwen.com/cms/media/2019815/65499b80-09dd-4ded-bc97-5fc3d5e21a94-1565832374013.mp3";
 //        url = "https://cdn.changguwen.com/cms/media/2019923/4ef9cdfb-7867-40e8-8d9b-c41242d60cce-1569231281741-mcd.m3u8";
 //        url="https://cdn.changguwen.com/cms/media/2019923/4ef9cdfb-7867-40e8-8d9b-c41242d60cce-1569231281741-mcd-00001.ts";
@@ -74,8 +75,6 @@ public class NativeMusicPlayer extends NativePlayerBase {
             nPrepare(this.source);
         }
     }
-
-
 
 
     @Override
@@ -125,6 +124,30 @@ public class NativeMusicPlayer extends NativePlayerBase {
         this.source = source;
         playNext = true;
         stop();
+
+    }
+
+    @Override
+    public void setVolume(int percent) {
+        nSetVolume(percent);
+
+    }
+
+    @Override
+    public void setMute(int mute) {
+        nSetMute(mute);
+
+    }
+
+    @Override
+    public void setPitch(float pitch) {
+        nSetPitch(pitch);
+
+    }
+
+    @Override
+    public void setSpeed(float speed) {
+        nSetSpeed(speed);
 
     }
 

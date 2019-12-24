@@ -32,8 +32,6 @@ public class MainActivity extends AppCompatActivity implements CacheListener {
 
     String url = "https://cdn.changguwen.com/cms/media/2019815/65499b80-09dd-4ded-bc97-5fc3d5e21a94-1565832374013.mp3";
 //    String url="http://x128.songtasty.com/attachment/20191111/QabrdVJ0C2EFR3ylxLOf.mp3";
-
-    // Used to load the 'native-lib' library on application startup.
     private SmartMusicPlayer mPlayer;
     MusicSeekBar musicSeekBar;
 
@@ -152,6 +150,7 @@ public class MainActivity extends AppCompatActivity implements CacheListener {
         Button btnStop = findViewById(R.id.btnStop);
 
         Button btnSeek = findViewById(R.id.btnSeek);
+        Button btnVolume = findViewById(R.id.btnVolume);
 
 
         btnPause.setOnClickListener(new View.OnClickListener() {

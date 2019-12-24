@@ -36,7 +36,7 @@ extern "C" JNIEXPORT jint JNICALL JNI_OnLoad(JavaVM *javaVM, void *reserved) {
 extern "C"
 JNIEXPORT void JNICALL
 Java_com_smart_media_player_natives_NativeMusicPlayer_nPrepare(JNIEnv *env, jobject instance,
-                                                        jstring input_url_) {
+                                                               jstring input_url_) {
     const char *input_url = env->GetStringUTFChars(input_url_, 0);
 
 
@@ -81,7 +81,8 @@ Java_com_smart_media_player_natives_NativeMusicPlayer_nPause(JNIEnv *env, jobjec
 
 extern "C"
 JNIEXPORT void JNICALL
-Java_com_smart_media_player_natives_NativeMusicPlayer_nSeekTo(JNIEnv *env, jobject thiz, jint time) {
+Java_com_smart_media_player_natives_NativeMusicPlayer_nSeekTo(JNIEnv *env, jobject thiz,
+                                                              jint time) {
     if (ffmpeg_music_handler != NULL) {
         ffmpeg_music_handler->seek_to(time);
     }
@@ -147,24 +148,30 @@ Java_com_smart_media_player_natives_NativeMusicPlayer_nGetDuration(JNIEnv *env, 
 
 extern "C"
 JNIEXPORT void JNICALL
-Java_com_smart_media_player_natives_NativeMusicPlayer_nSetVolume(JNIEnv *env, jobject thiz, jint percent) {
-    // TODO: implement nSetVolume()
+Java_com_smart_media_player_natives_NativeMusicPlayer_nSetVolume(JNIEnv *env, jobject thiz,
+                                                                 jint percent) {
+    if (ffmpeg_music_handler != NULL) {
+        ffmpeg_music_handler->set_volume(percent);
+    }
 }
 
 extern "C"
 JNIEXPORT void JNICALL
-Java_com_smart_media_player_natives_NativeMusicPlayer_nSetMute(JNIEnv *env, jobject thiz, jint mute) {
+Java_com_smart_media_player_natives_NativeMusicPlayer_nSetMute(JNIEnv *env, jobject thiz,
+                                                               jint mute) {
     // TODO: implement nSetMute()
 }
 
 extern "C"
 JNIEXPORT void JNICALL
-Java_com_smart_media_player_natives_NativeMusicPlayer_nSetPitch(JNIEnv *env, jobject thiz, jfloat pitch) {
+Java_com_smart_media_player_natives_NativeMusicPlayer_nSetPitch(JNIEnv *env, jobject thiz,
+                                                                jfloat pitch) {
     // TODO: implement nSetPitch()
 }
 
 extern "C"
 JNIEXPORT void JNICALL
-Java_com_smart_media_player_natives_NativeMusicPlayer_nSetSpeed(JNIEnv *env, jobject thiz, jfloat speed) {
+Java_com_smart_media_player_natives_NativeMusicPlayer_nSetSpeed(JNIEnv *env, jobject thiz,
+                                                                jfloat speed) {
     // TODO: implement nSetSpeed()
 }

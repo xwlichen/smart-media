@@ -194,23 +194,28 @@ void AudioHandler::init_opensles() {
                                        SL_BOOLEAN_TRUE,
                                        SL_BOOLEAN_TRUE,
                                        SL_BOOLEAN_TRUE};
-    result = (*p_engine)->CreateAudioPlayer(p_engine, &p_player, &audio_src, &audio_snk, 4,
+    result = (*p_engine)->CreateAudioPlayer(p_engine, &p_player_obj, &audio_src, &audio_snk, 4,
                                             interface_ids, interface_required);
     if (SL_RESULT_SUCCESS != result)
         LOGE(JNI_DEBUG, "CreateAudioPlayer res: %d", SL_RESULT_SUCCESS == result);
 
     //realize the player
-    result = (*p_player)->Realize(p_player, SL_BOOLEAN_FALSE);
+    result = (*p_player_obj)->Realize(p_player_obj, SL_BOOLEAN_FALSE);
     if (SL_RESULT_SUCCESS != result)
         LOGE(JNI_DEBUG, "realize the player res: %d", SL_RESULT_SUCCESS == result);
 
     //get the play interface
-    result = (*p_player)->GetInterface(p_player, SL_IID_PLAY, &p_sl_play_itf);
+    result = (*p_player_obj)->GetInterface(p_player_obj, SL_IID_PLAY, &p_sl_play_itf);
     if (SL_RESULT_SUCCESS != result)
         LOGE(JNI_DEBUG, "get the player interface res: %d", SL_RESULT_SUCCESS == result);
 
+    result = (*p_player_obj)->GetInterface(p_player_obj, SL_IID_PLAY, &p_volume_itf);
+    if (SL_RESULT_SUCCESS != result)
+        LOGE(JNI_DEBUG, "get the voluem interface res: %d", SL_RESULT_SUCCESS == result);
+
     //设置缓存队列和回调函数
-    result = (*p_player)->GetInterface(p_player, SL_IID_BUFFERQUEUE, &p_android_buffer_queue_itf);
+    result = (*p_player_obj)->GetInterface(p_player_obj, SL_IID_BUFFERQUEUE,
+                                           &p_android_buffer_queue_itf);
     if (SL_RESULT_SUCCESS != result)
         LOGE(JNI_DEBUG, "get the buffer queue interface res: %d", SL_RESULT_SUCCESS == result);
 
@@ -489,11 +494,49 @@ void AudioHandler::seek_to(uint64_t seconds) {
 
 }
 
+void AudioHandler::set_volume(int percent) {
+
+    if (p_volume_itf != NULL) {
+        if (percent > 30) {
+            (*p_volume_itf)->SetVolumeLevel(p_volume_itf, (100 - percent) * -20);
+        } else if (percent > 25) {
+            (*p_volume_itf)->SetVolumeLevel(p_volume_itf, (100 - percent) * -22);
+        } else if (percent > 20) {
+            (*p_volume_itf)->SetVolumeLevel(p_volume_itf, (100 - percent) * -25);
+        } else if (percent > 15) {
+            (*p_volume_itf)->SetVolumeLevel(p_volume_itf, (100 - percent) * -28);
+        } else if (percent > 10) {
+            (*p_volume_itf)->SetVolumeLevel(p_volume_itf, (100 - percent) * -30);
+        } else if (percent > 5) {
+            (*p_volume_itf)->SetVolumeLevel(p_volume_itf, (100 - percent) * -34);
+        } else if (percent > 3) {
+            (*p_volume_itf)->SetVolumeLevel(p_volume_itf, (100 - percent) * -37);
+        } else if (percent > 0) {
+            (*p_volume_itf)->SetVolumeLevel(p_volume_itf, (100 - percent) * -40);
+        } else {
+            (*p_volume_itf)->SetVolumeLevel(p_volume_itf, (100 - percent) * -100);
+        }
+    }
+
+}
+
+void AudioHandler::set_mute(int mute) {
+
+}
+
+void AudioHandler::set_pitch(float pitch) {
+
+}
+
+void AudioHandler::set_speed(float speed) {}
+
+
 void AudioHandler::release() {
-    if (p_player != NULL) {
-        (*p_player)->Destroy(p_player);
-        p_player = NULL;
+    if (p_player_obj != NULL) {
+        (*p_player_obj)->Destroy(p_player_obj);
+        p_player_obj = NULL;
         p_sl_play_itf = NULL;
+        p_volume_itf = NULL;
         p_android_buffer_queue_itf = NULL;
 
 

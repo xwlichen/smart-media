@@ -13,8 +13,6 @@ import com.smart.media.player.natives.NativePlayerBase;
 public class SmartMusicPlayer extends SmartBasePlayer {
 
 
-
-
     @Override
     public void next(String source) {
         this.source = source;
@@ -28,7 +26,6 @@ public class SmartMusicPlayer extends SmartBasePlayer {
     protected NativePlayerBase createNativePlayer() {
         return new NativeMusicPlayer();
     }
-
 
 
 }

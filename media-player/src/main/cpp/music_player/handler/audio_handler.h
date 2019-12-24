@@ -25,14 +25,28 @@ public:
 
     pthread_t start_thread;
     uint8_t *p_convert_out_buffer = NULL;
+
+
+    //引擎
+    SLObjectItf p_engine_obj = NULL;
     SLEngineItf p_engine = NULL;
+    SLVolumeItf p_volume_itf = NULL;//opensles 音量控制
+
+
+
+    //混音器
+    SLObjectItf p_mix_obj = NULL;
+    SLEnvironmentalReverbItf p_output_mix_environmental_reverb = NULL;
+
+    //pcm
     SLPlayItf p_sl_play_itf = NULL;//
-    SLObjectItf p_player = NULL;//
-    SLObjectItf p_mix_obj = NULL;//混音器
-    SLObjectItf p_engine_obj = NULL;//引擎
+    SLObjectItf p_player_obj = NULL;//
+
+
+
+    //缓冲器队列接口
     SLAndroidSimpleBufferQueueItf p_android_buffer_queue_itf;
 
-    SLEnvironmentalReverbItf p_output_mix_environmental_reverb=NULL;
 
     int frame_buffer_size = 0;
     int sample_rate;
@@ -69,6 +83,15 @@ public:
     void stop();
 
     void seek_to(uint64_t seconds);
+
+    void set_volume(int percent);
+
+    void set_mute(int mute);
+
+    void set_pitch(float pitch);
+
+    void set_speed(float speed);
+
 
     void release();
 

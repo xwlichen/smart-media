@@ -226,6 +226,24 @@ void FFmpegMusicHandler::resume() {
 }
 
 
+void FFmpegMusicHandler::set_volume(int percent) {
+    if(p_audio!=NULL){
+        p_audio->set_volume(percent);
+    }
+
+}
+
+void FFmpegMusicHandler::set_mute(int mute) {
+
+}
+
+void FFmpegMusicHandler::set_pitch(float pitch) {
+
+}
+
+void FFmpegMusicHandler::set_speed(float speed) {}
+
+
 void FFmpegMusicHandler::decode_frame_to_avpacket() {
     int res = 0;
     while (p_player_status != NULL && !p_player_status->is_exit) {

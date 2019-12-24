@@ -19,7 +19,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="播放"
-            android:visibility="gone"/>
+            android:visibility="gone" />
 
         <Button
             android:id="@+id/btnPause"
@@ -63,8 +63,20 @@
             android:id="@+id/btnSeek"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="seek2秒" />
+            android:text="seek秒" />
+
+        <EditText
+            android:id="@+id/etVolume"
+            android:layout_width="100dp"
+            android:layout_height="wrap_content" />
+
+        <Button
+            android:id="@+id/btnVolume"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="volume%" />
     </LinearLayout>
+
 
     <LinearLayout
         android:layout_width="match_parent"

@@ -74,6 +74,16 @@ public:
 
     void seek_to(int64_t seconds);
 
+
+    void set_volume(int percent);
+
+    void set_mute(int mute);
+
+    void set_pitch(float pitch);
+
+    void set_speed(float speed);
+
+
     void release();
 
     void call_player_jni_error(ThreadMode threadMode, bool can_release, int code, char *msg);

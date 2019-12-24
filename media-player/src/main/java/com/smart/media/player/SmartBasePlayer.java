@@ -78,6 +78,7 @@ public abstract class SmartBasePlayer implements ISmartPlayer {
     }
 
 
+
     @Override
     public void seek(int second) {
         nativePlayer.seek(second);
@@ -95,6 +96,27 @@ public abstract class SmartBasePlayer implements ISmartPlayer {
 
     }
 
+    @Override
+    public void setVolume(int percent) {
+        nativePlayer.setVolume(percent);
+    }
+
+    @Override
+    public void setMute(int mute) {
+        nativePlayer.setMute(mute);
+    }
+
+    @Override
+    public void setPitch(float pitch) {
+        nativePlayer.setPitch(pitch);
+
+    }
+
+    @Override
+    public void setSpeed(float speed) {
+        nativePlayer.setSpeed(speed);
+
+    }
 
     @Override
     public void stop() {

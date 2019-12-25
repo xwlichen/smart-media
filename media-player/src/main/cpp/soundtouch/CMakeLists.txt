@@ -29,6 +29,9 @@ add_library(
         source/TDStretch.cpp
         source/PeakFinder.cpp
 
+        # wrapper
+        soundtouch_wrapper.cpp
+
 )
 
 target_include_directories(

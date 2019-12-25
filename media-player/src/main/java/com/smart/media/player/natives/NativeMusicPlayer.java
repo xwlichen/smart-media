@@ -171,6 +171,10 @@ public class NativeMusicPlayer extends NativePlayerBase {
 
     protected native void nSetVolume(int percent);
 
+    /**
+     * 声道
+     * @param mute 左、右、立体
+     */
     protected native void nSetMute(int mute);
 
     protected native void nSetPitch(float pitch);

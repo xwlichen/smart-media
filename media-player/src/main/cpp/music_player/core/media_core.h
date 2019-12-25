@@ -79,10 +79,6 @@ public:
     double last_update_time = 0;
 
 
-    /**
-     * 是否读帧结束
-     */
-    bool read_frame_finished = true;
 
     /**
      * 回调java层

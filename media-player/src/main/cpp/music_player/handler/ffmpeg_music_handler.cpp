@@ -227,21 +227,30 @@ void FFmpegMusicHandler::resume() {
 
 
 void FFmpegMusicHandler::set_volume(int percent) {
-    if(p_audio!=NULL){
+    if (p_audio != NULL) {
         p_audio->set_volume(percent);
     }
 
 }
 
 void FFmpegMusicHandler::set_mute(int mute) {
+    if (p_audio != NULL) {
+        p_audio->set_mute(mute);
+    }
 
 }
 
 void FFmpegMusicHandler::set_pitch(float pitch) {
-
+    if (p_audio != NULL) {
+        p_audio->set_pitch(pitch);
+    }
 }
 
-void FFmpegMusicHandler::set_speed(float speed) {}
+void FFmpegMusicHandler::set_speed(float speed) {
+    if (p_audio != NULL) {
+        p_audio->set_speed(speed);
+    }
+}
 
 
 void FFmpegMusicHandler::decode_frame_to_avpacket() {

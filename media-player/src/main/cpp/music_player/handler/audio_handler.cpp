@@ -15,6 +15,12 @@ AudioHandler::AudioHandler(int stream_index, PlayerStatus *player_status,
                            JNIPlayerCall *p_jni_player_call)
         : MediaCore(stream_index, player_status, p_jni_player_call) {
 
+//    sample_buffer = static_cast<SAMPLETYPE *>(malloc(sample_rate * 2 * 2));
+    LOGE(JNI_DEBUG, "AudioHandler()----");
+    p_soundtouchwrapper = new SoundTouchWrapper();
+    p_soundtouchwrapper->create();
+
+
 }
 
 AudioHandler::~AudioHandler() {
@@ -42,9 +48,14 @@ int AudioHandler::analysis_stream(ThreadMode thread_mode, AVFormatContext *p_avf
     }
 
 
-//    frame_buffer_size = p_avcodec_ctx_decoder_in->frame_size * 2 * 2;
-    frame_buffer_size = sample_rate * 2 * 2;
-    p_convert_out_buffer = (uint8_t *) malloc(frame_buffer_size);
+    convert_out_buffer = (uint8_t *) av_malloc(sample_rate * 2 * 2);
+
+    sample_buffer = static_cast<SAMPLETYPE *>(malloc(sample_rate * 2 * 2));
+    p_soundtouchwrapper->get_soundtouch()->setSampleRate(sample_rate);
+    p_soundtouchwrapper->get_soundtouch()->setChannels(2);
+    p_soundtouchwrapper->get_soundtouch()->setPitch(pitch);
+    p_soundtouchwrapper->get_soundtouch()->setTempo(speed);
+
 
     return 0;
 
@@ -70,19 +81,20 @@ void buffer_queue_callback(SLAndroidSimpleBufferQueueItf caller, void *ctx) {
     if (p_audio != NULL) {
 //        LOGE(JNI_DEBUG, "resample_audio start----");
 
-        int data_size = p_audio->resample_audio();
+        int nb = p_audio->get_soundtouch_data();
+//        uint8_t *temp_buffer;
+//        int buffer_size = p_audio->resample_audio(reinterpret_cast<void **>(&temp_buffer));
+
 //        LOGE(JNI_DEBUG, "resample_audio end----");
 
-
-        int buffer_size = data_size;
 //        LOGE(JNI_DEBUG, "buffer_size:%d", buffer_size);
 //        LOGE(JNI_DEBUG, "p_audio->p_avcodec_ctx_decoder_in->sample_rate:%d",
 //             p_audio->p_avcodec_ctx_decoder_in->sample_rate)
 //        LOGE(JNI_DEBUG, " buffer_size :%d  ,p_audio->sample_rate * 2 * 2 :%d ,value:%lf",  buffer_size ,p_audio->sample_rate * 2 * 2, buffer_size / ((double)(p_audio->sample_rate * 2 * 2)));
 
-        if (buffer_size > 0) {
+        if (nb > 0) {
             p_audio->current_time +=
-                    buffer_size / (p_audio->sample_rate * 2 * 2);
+                    nb / (p_audio->sample_rate * 2 * 2);
 
 
 
@@ -102,8 +114,8 @@ void buffer_queue_callback(SLAndroidSimpleBufferQueueItf caller, void *ctx) {
                 p_audio->p_jni_player_call->call_complete(THREAD_CHILD);
             }
             (*p_audio->p_android_buffer_queue_itf)->Enqueue(p_audio->p_android_buffer_queue_itf,
-                                                            (char *) p_audio->p_convert_out_buffer,
-                                                            data_size);
+                                                            (char *) p_audio->sample_buffer,
+                                                            nb * 2 * 2);
 
 
         }
@@ -209,9 +221,15 @@ void AudioHandler::init_opensles() {
     if (SL_RESULT_SUCCESS != result)
         LOGE(JNI_DEBUG, "get the player interface res: %d", SL_RESULT_SUCCESS == result);
 
+    //获取音量接口
     result = (*p_player_obj)->GetInterface(p_player_obj, SL_IID_VOLUME, &p_volume_itf);
     if (SL_RESULT_SUCCESS != result)
         LOGE(JNI_DEBUG, "get the voluem interface res: %d", SL_RESULT_SUCCESS == result);
+
+    //获取声道接口
+    result = (*p_player_obj)->GetInterface(p_player_obj, SL_IID_MUTESOLO, &p_mute_itf);
+    if (SL_RESULT_SUCCESS != result)
+        LOGE(JNI_DEBUG, "get the mute interface res: %d", SL_RESULT_SUCCESS == result);
 
     //设置缓存队列和回调函数
     result = (*p_player_obj)->GetInterface(p_player_obj, SL_IID_BUFFERQUEUE,
@@ -237,7 +255,46 @@ void AudioHandler::init_opensles() {
 }
 
 
-int AudioHandler::resample_audio() {
+int AudioHandler::get_soundtouch_data() {
+    while (p_player_status != NULL && !p_player_status->is_exit) {
+        temp_soundtouch_buffer = NULL;
+
+        if (soundtouch_finished) {
+            soundtouch_finished = false;
+            data_size = resample_audio(reinterpret_cast<void **>(&temp_soundtouch_buffer));
+            if (data_size > 0) {
+                for (int i = 0; i < data_size / 2 + 1; i++) {
+                    sample_buffer[i] = (temp_soundtouch_buffer[i * 2] |
+                                        ((temp_soundtouch_buffer[i * 2 + 1]) << 8));
+                }
+                p_soundtouchwrapper->get_soundtouch()->putSamples(sample_buffer,
+                                                                  nb_out_sample_rate);
+                nb_soundtouch = p_soundtouchwrapper->get_soundtouch()->receiveSamples(
+                        sample_buffer, data_size / 4);
+            } else {
+                p_soundtouchwrapper->get_soundtouch()->flush();
+            }
+        }
+        if (nb_soundtouch == 0) {
+            soundtouch_finished = true;
+            continue;
+        } else {
+            if (temp_soundtouch_buffer == NULL) {
+                nb_soundtouch = p_soundtouchwrapper->get_soundtouch()->receiveSamples(
+                        sample_buffer, data_size / 4);
+                if (nb_soundtouch == 0) {
+                    soundtouch_finished = true;
+                    continue;
+                }
+            }
+            return nb_soundtouch;
+        }
+    }
+    return 0;
+
+}
+
+int AudioHandler::resample_audio(void **pcmbuf) {
 
     int res;
     data_size = 0;
@@ -341,7 +398,7 @@ int AudioHandler::resample_audio() {
             // 调用重采样的方法，返回值是返回重采样的个数，也就是 pFrame->nb_samples
             // swr_convert的重采样不能改变采样率，输入是多少，输出就要是多少，一般通过ffmpeg的avFilter改变采样率
             nb_out_sample_rate = swr_convert(p_swr_ctx,
-                                             &p_convert_out_buffer,
+                                             &convert_out_buffer,
                                              p_avframe->nb_samples,
                                              (const uint8_t **) p_avframe->data,//原始解压过后的数据
                                              p_avframe->nb_samples);
@@ -360,6 +417,7 @@ int AudioHandler::resample_audio() {
             }
 //            LOGE(JNI_DEBUG, "current_time:%lf", current_time);
 
+            *pcmbuf = convert_out_buffer;
 
             av_packet_free(&p_avpacket);
             av_free(p_avpacket);
@@ -527,6 +585,22 @@ void AudioHandler::set_volume(int percent) {
 
 void AudioHandler::set_mute(int mute) {
 
+    if (p_mute_itf != NULL) {
+        if (mute == 0)//right
+        {
+            (*p_mute_itf)->SetChannelMute(p_mute_itf, 1, false);
+            (*p_mute_itf)->SetChannelMute(p_mute_itf, 0, true);
+        } else if (mute == 1)//left
+        {
+            (*p_mute_itf)->SetChannelMute(p_mute_itf, 1, true);
+            (*p_mute_itf)->SetChannelMute(p_mute_itf, 0, false);
+        } else if (mute == 2)//center
+        {
+            (*p_mute_itf)->SetChannelMute(p_mute_itf, 1, false);
+            (*p_mute_itf)->SetChannelMute(p_mute_itf, 0, false);
+        }
+
+    }
 }
 
 void AudioHandler::set_pitch(float pitch) {
@@ -563,9 +637,19 @@ void AudioHandler::release() {
     }
 
 
-    if (p_convert_out_buffer) {
-        free(p_convert_out_buffer);
-        p_convert_out_buffer = NULL;
+    if (convert_out_buffer) {
+        free(convert_out_buffer);
+        convert_out_buffer = NULL;
+    }
+    if (temp_soundtouch_buffer != NULL) {
+        temp_soundtouch_buffer = NULL;
+    }
+
+
+    if (p_soundtouchwrapper != NULL) {
+        p_soundtouchwrapper->destroy();
+        delete p_soundtouchwrapper;
+        p_soundtouchwrapper = NULL;
     }
 
     MediaCore::release();

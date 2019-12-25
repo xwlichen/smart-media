@@ -159,19 +159,25 @@ extern "C"
 JNIEXPORT void JNICALL
 Java_com_smart_media_player_natives_NativeMusicPlayer_nSetMute(JNIEnv *env, jobject thiz,
                                                                jint mute) {
-    // TODO: implement nSetMute()
+    if (ffmpeg_music_handler != NULL) {
+        ffmpeg_music_handler->set_mute(mute);
+    }
 }
 
 extern "C"
 JNIEXPORT void JNICALL
 Java_com_smart_media_player_natives_NativeMusicPlayer_nSetPitch(JNIEnv *env, jobject thiz,
                                                                 jfloat pitch) {
-    // TODO: implement nSetPitch()
+    if (ffmpeg_music_handler != NULL) {
+        ffmpeg_music_handler->set_pitch(pitch);
+    }
 }
 
 extern "C"
 JNIEXPORT void JNICALL
 Java_com_smart_media_player_natives_NativeMusicPlayer_nSetSpeed(JNIEnv *env, jobject thiz,
                                                                 jfloat speed) {
-    // TODO: implement nSetSpeed()
+    if (ffmpeg_music_handler != NULL) {
+        ffmpeg_music_handler->set_speed(speed);
+    }
 }

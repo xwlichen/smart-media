@@ -12,6 +12,8 @@
 
 MediaCore::MediaCore(int stream_index, PlayerStatus *p_player_status,
                      JNIPlayerCall *p_jni_player_call) {
+    LOGE(JNI_DEBUG, "MediaCore()----");
+
     this->stream_index = stream_index;
     this->p_player_status = p_player_status;
     this->p_jni_player_call = p_jni_player_call;

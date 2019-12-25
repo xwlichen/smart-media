@@ -254,4 +254,64 @@ public class MainActivity extends AppCompatActivity implements CacheListener {
         mPlayer.stop();
 
     }
+
+
+    public void setLeft(View view) {
+        mPlayer.setMute(1);
+    }
+
+    public void setRight(View view) {
+        mPlayer.setMute(0);
+    }
+
+    public void setLeftRight(View view) {
+        mPlayer.setMute(2);
+    }
+
+
+    public void setSpeed1(View view) {
+        mPlayer.setSpeed(1.5f);
+    }
+
+    public void setSpeed2(View view) {
+        mPlayer.setSpeed(0.5f);
+    }
+
+    public void setSpeed3(View view) {
+        mPlayer.setSpeed(1.0f);
+    }
+
+
+    public void setPitch1(View view) {
+        mPlayer.setPitch(1.5f);
+    }
+
+    public void setPitch2(View view) {
+        mPlayer.setPitch(0.5f);
+    }
+
+    public void setPitch3(View view) {
+        mPlayer.setPitch(1.0f);
+    }
+
+
+
+
+
+    public void setMix1(View view) {
+        mPlayer.setPitch(1.5f);
+        mPlayer.setSpeed(1.5f);
+    }
+
+    public void setMix2(View view) {
+        mPlayer.setPitch(0.5f);
+        mPlayer.setSpeed(0.5f);
+
+    }
+
+    public void setMix3(View view) {
+        mPlayer.setPitch(1.0f);
+        mPlayer.setSpeed(1.0f);
+
+    }
 }

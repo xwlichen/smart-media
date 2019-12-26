@@ -237,6 +237,9 @@ void AudioHandler::init_opensles() {
     if (SL_RESULT_SUCCESS != result)
         LOGE(JNI_DEBUG, "get the buffer queue interface res: %d", SL_RESULT_SUCCESS == result);
 
+    set_volume(volume);
+    set_mute(mute);
+
     // 每次回调 this 会被带给 playerCallback 里面的 context
     result = (*p_android_buffer_queue_itf)->RegisterCallback(p_android_buffer_queue_itf,
                                                              buffer_queue_callback,
@@ -553,6 +556,7 @@ void AudioHandler::seek_to(uint64_t seconds) {
 }
 
 void AudioHandler::set_volume(int percent) {
+    this->volume = percent;
 
     if (p_volume_itf != NULL) {
         LOGE(JNI_DEBUG, "set_volume: %d", percent);
@@ -584,6 +588,7 @@ void AudioHandler::set_volume(int percent) {
 }
 
 void AudioHandler::set_mute(int mute) {
+    this->mute = mute;
 
     if (p_mute_itf != NULL) {
         if (mute == 0)//right
@@ -604,10 +609,19 @@ void AudioHandler::set_mute(int mute) {
 }
 
 void AudioHandler::set_pitch(float pitch) {
+    this->pitch = pitch;
+    if (p_soundtouchwrapper != NULL && p_soundtouchwrapper->get_soundtouch() != NULL) {
+        p_soundtouchwrapper->get_soundtouch()->setPitch(pitch);
+    }
 
 }
 
-void AudioHandler::set_speed(float speed) {}
+void AudioHandler::set_speed(float speed) {
+    this->speed = speed;
+    if (p_soundtouchwrapper != NULL && p_soundtouchwrapper->get_soundtouch() != NULL) {
+        p_soundtouchwrapper->get_soundtouch()->setTempo(speed);
+    }
+}
 
 
 void AudioHandler::release() {

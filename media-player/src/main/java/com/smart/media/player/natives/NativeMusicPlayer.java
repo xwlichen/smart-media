@@ -20,15 +20,15 @@ public class NativeMusicPlayer extends NativePlayerBase {
 
     static {
         System.loadLibrary("smart-player");
-
-//        System.loadLibrary("avcodec");
-//        System.loadLibrary("avdevice");
-//        System.loadLibrary("avfilter");
-//        System.loadLibrary("avformat");
-//        System.loadLibrary("avutil");
-//        System.loadLibrary("postproc");
-//        System.loadLibrary("swresample");
-//        System.loadLibrary("swscale");
+        System.loadLibrary("soundtouch");
+        System.loadLibrary("avcodec");
+        System.loadLibrary("avdevice");
+        System.loadLibrary("avfilter");
+        System.loadLibrary("avformat");
+        System.loadLibrary("avutil");
+        System.loadLibrary("postproc");
+        System.loadLibrary("swresample");
+        System.loadLibrary("swscale");
     }
 
     @Override
@@ -173,6 +173,7 @@ public class NativeMusicPlayer extends NativePlayerBase {
 
     /**
      * 声道
+     *
      * @param mute 左、右、立体
      */
     protected native void nSetMute(int mute);

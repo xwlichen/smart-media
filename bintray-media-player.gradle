@@ -11,5 +11,5 @@ publish {
     groupId = 'com.samrt.media.player' //包名
     artifactId = 'smart-media-player'// bintray创建的package
     desc = 'andorid media player  '
-    publishVersion = '1.0.1'
+    publishVersion = '1.0.3'
 }

@@ -5,11 +5,11 @@ android {
     defaultConfig {
 
         externalNativeBuild {
-            cmake {
-                cppFlags "-std=c++11"
-                arguments "-DANDROID_PLATFORM_LEVEL=16",
-                        '-DANDROID_TOOLCHAIN=clang'
-            }
+//            cmake {
+//                cppFlags "-std=c++11"
+//                arguments "-DANDROID_PLATFORM_LEVEL=16",
+//                        '-DANDROID_TOOLCHAIN=clang'
+//            }
 
             ndk {
 //            abiFilters "armeabi"
@@ -19,9 +19,22 @@ android {
         }
     }
 
-    externalNativeBuild {
-        cmake {
-            path file('src/main/cpp/CMakeLists.txt')
+//    externalNativeBuild {
+//        cmake {
+//            path file('src/main/cpp/CMakeLists.txt')
+//        }
+//    }
+
+//    sourceSets {
+//        main {
+//            jniLibs.srcDirs = ['libs']
+//        }
+//    }
+
+    repositories {
+        flatDir {
+            dirs 'libs'
+
         }
     }
 

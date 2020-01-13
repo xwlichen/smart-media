@@ -21,6 +21,7 @@ public class NativeMusicPlayer extends NativePlayerBase {
     static {
         System.loadLibrary("smart-player");
         System.loadLibrary("soundtouch");
+
         System.loadLibrary("avcodec");
         System.loadLibrary("avdevice");
         System.loadLibrary("avfilter");
